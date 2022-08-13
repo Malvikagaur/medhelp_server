@@ -27,20 +27,20 @@ router.post("/signup", async (req, res) => {
   router.post("/signin", async (req, res) => {
     const user = await User.findOne({useremail : req.body.useremail})
     if(!user){
-      return res.send("user not found");
+      return res.status(500).send("user not found");
     }
     //find return array
     //findone return object
     
   const check = bcrypt.compareSync(req.body.password, user.password);
-
     if(!check){
       return res.status(500).send("user password is not correct");
+
     }
   
     const token = authFile.genToken(user._id);
 
-    return res.send(token);
+    return res.send({token : token});
   });
 
   //update user by run
