@@ -99,6 +99,18 @@ router.post("/signupdoc", authFile.authenticationChecker ,async (req, res) => {
       return res.send(doctors);
   })
 
+  //Find single Doctor
+
+  router.get("/SingleDoctor/:Doctorid" , authFile.authenticationChecker, async (req,res) =>
+  {
+      const doctorid = req.params.Doctorid;
+      const doctor  = await Doctor.findById((doctorid))
+      console.log(doctor);
+      
+      return res.send(doctor);
+  })
+
+
   //delete doctor
   router.delete("/deletedoctor", async (req, res) =>{
     const id = req.body.id;
