@@ -6,7 +6,7 @@ const docSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    Doctoremail: {
+    About: {
       type: String,
       required: true,
     },
@@ -29,6 +29,14 @@ const docSchema = new mongoose.Schema(
     Fees: {
         type: String,
         required: true,
+    },
+    rating : {
+      type: Number,
+      required : true,
+    },
+    DoctorImg : {
+      type : String,
+      required :true
     }
   },
   {

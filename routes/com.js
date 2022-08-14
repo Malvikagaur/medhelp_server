@@ -71,19 +71,33 @@ router.post("/signup", async (req, res) => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   //signup for doctor
-router.post("/signupdoc", async (req, res) => {
-    await Doctor.create({
+router.post("/signupdoc", authFile.authenticationChecker ,async (req, res) => {
+    const DoctorsDetail = {
       Doctorname: req.body.Doctorname,
-      Doctoremail: req.body.Doctoremail,
+      About: req.body.About,
       Degree: req.body.Degree,
       Specielity: req.body.Specielity,
       Experience: req.body.Experience,
-      address: req.body.address,
+      Address: req.body.Address,
       Fees: req.body.Fees,
-    });
+      rating : req.body.rating,
+      DoctorImg : req.body.DoctorImg,
+    }
+
+    await Doctor.create(DoctorsDetail);
   
     return res.send("doctor created");
   });
+
+
+  //Find all doctors 
+
+  router.get("/FindallDoctors" , authFile.authenticationChecker, async (req,res) =>
+  {
+      const doctors = await Doctor.find({});
+
+      return res.send(doctors);
+  })
 
   //delete doctor
   router.delete("/deletedoctor", async (req, res) =>{
