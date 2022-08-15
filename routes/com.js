@@ -111,6 +111,24 @@ router.post("/signupdoc", authFile.authenticationChecker ,async (req, res) => {
   })
 
 
+  //Booked Doctor
+  router.post("/DoctorBooked/:Doctorid" , authFile.authenticationChecker , async (req,res) =>
+  {
+    const doctorid = req.params.Doctorid;
+    const userid = req.body.id;
+    console.log(userid);
+    const user = await User.findByIdAndUpdate(userid, { 
+      $push : {DoctorBooked : doctorid}
+    },
+    {
+      new : true,
+      runValidators : true
+    })
+
+    return res.send(user);
+  })
+
+
   //delete doctor
   router.delete("/deletedoctor", async (req, res) =>{
     const id = req.body.id;
