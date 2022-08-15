@@ -40,7 +40,8 @@ router.post("/signup", async (req, res) => {
   
     const token = authFile.genToken(user._id);
 
-    return res.send({token : token});
+    return res.send({token : token,
+    userid : user._id});
   });
 
   //update user by run
@@ -105,26 +106,23 @@ router.post("/signupdoc", authFile.authenticationChecker ,async (req, res) => {
   {
       const doctorid = req.params.Doctorid;
       const doctor  = await Doctor.findById((doctorid))
-      console.log(doctor);
       
       return res.send(doctor);
   })
 
 
-  //Booked Doctor
-  router.post("/DoctorBooked/:Doctorid" , authFile.authenticationChecker , async (req,res) =>
+  //Doctor Booked
+  router.post("/DoctorBooked/:doctorid" , authFile.authenticationChecker , async (req,res) =>
   {
-    const doctorid = req.params.Doctorid;
     const userid = req.body.id;
-    console.log(userid);
-    const user = await User.findByIdAndUpdate(userid, { 
-      $push : {DoctorBooked : doctorid}
+    const doctorId = req.params.doctorid;
+    const user = await User.findByIdAndUpdate(userid,{ 
+      $push : {DoctorBooked : doctorId}
     },
     {
       new : true,
-      runValidators : true
+      runValidators : true,
     })
-
     return res.send(user);
   })
 
