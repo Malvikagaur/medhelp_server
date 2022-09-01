@@ -7,6 +7,7 @@ const authFile = require("../services/authentication");
 
 //signup for user
 router.post("/signup", async (req, res) => {
+  try {
   var salt = bcrypt.genSaltSync(10);
   var hash = bcrypt.hashSync(req.body.password, salt);
     await User.create({
@@ -16,15 +17,27 @@ router.post("/signup", async (req, res) => {
     });
   
     return res.send("User created");
+  }
+  catch (error) {
+    console.log(error);
+  }
   });
+  
+
     // get all users
     router.get("/fetchusers", authFile.authenticationChecker, async (req, res) => {
+      try{
       const users = await User.find({});
     
       return res.send(users);
+      }catch(error){
+        console.log(error);
+      }
     });
   //login user 
   router.post("/signin", async (req, res) => {
+    try{
+
     const user = await User.findOne({useremail : req.body.useremail})
     if(!user){
       return res.status(500).send("user not found");
@@ -42,10 +55,14 @@ router.post("/signup", async (req, res) => {
 
     return res.send({token : token,
     userid : user._id});
+    }catch(error){
+      console.log(error);
+    }
   });
 
   //update user by run
   router.post("/updateuser", async (req, res) =>{
+    try{
     const id = req.body.id;
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -59,20 +76,28 @@ router.post("/signup", async (req, res) => {
       }
     );
     return res.send(updatedUser);
+    }catch(error){
+      console.log(error);
+    }
   });
 
   //delete user
   router.delete("/deleteuser", async (req, res) =>{
+    try{
     const id = req.body.id;
     await User.findByIdAndDelete(id);
 
     return res.send("User deleted successfully");
+    }catch(error){
+      console.log(error);
+    }
   });
   
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   //signup for doctor
 router.post("/signupdoc", authFile.authenticationChecker ,async (req, res) => {
+  try{
     const DoctorsDetail = {
       Doctorname: req.body.Doctorname,
       About: req.body.About,
@@ -88,6 +113,9 @@ router.post("/signupdoc", authFile.authenticationChecker ,async (req, res) => {
     await Doctor.create(DoctorsDetail);
   
     return res.send("doctor created");
+  }catch(error){
+    console.log(error);
+  }
   });
 
 
@@ -95,25 +123,34 @@ router.post("/signupdoc", authFile.authenticationChecker ,async (req, res) => {
 
   router.get("/FindallDoctors" , authFile.authenticationChecker, async (req,res) =>
   {
+    try{
       const doctors = await Doctor.find({});
 
       return res.send(doctors);
+    }catch(error){
+      console.log(error);
+    }
   })
 
   //Find single Doctor
 
   router.get("/SingleDoctor/:Doctorid" , authFile.authenticationChecker, async (req,res) =>
   {
+    try{
       const doctorid = req.params.Doctorid;
       const doctor  = await Doctor.findById((doctorid))
       
       return res.send(doctor);
+    }catch(error){
+      console.log(error);
+    }
   })
 
 
   //Doctor Booked
   router.post("/DoctorBooked/:doctorid" , authFile.authenticationChecker , async (req,res) =>
   {
+    try{
     const userid = req.body.id;
     const doctorId = req.params.doctorid;
     const user = await User.findByIdAndUpdate(userid,{ 
@@ -124,15 +161,22 @@ router.post("/signupdoc", authFile.authenticationChecker ,async (req, res) => {
       runValidators : true,
     })
     return res.send(user);
+  }catch(error){
+    console.log(error);
+  }
   })
 
 
   //delete doctor
   router.delete("/deletedoctor", async (req, res) =>{
+    try{
     const id = req.body.id;
     await Doctor.findByIdAndDelete(id);
 
     return res.send("User deleted successfully");
+    }catch(error){
+      console.log(error);
+    }
   });
 
 
