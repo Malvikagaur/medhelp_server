@@ -178,6 +178,7 @@ router.post("/signupdoc", authFile.authenticationChecker ,async (req, res) => {
       console.log(error);
     }
   });
+  
 
 
   module.exports = router;
