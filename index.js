@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const logger = require("morgan");
 const cors = require("cors");
-const PORT = 8000;
+const PORT = process.env.PORT;
 
 const dbConfig = require("../medhelp_server/services/dbConfig");
 dbConfig();
