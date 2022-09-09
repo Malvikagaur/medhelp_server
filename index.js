@@ -4,7 +4,7 @@ const logger = require("morgan");
 const cors = require("cors");
 const PORT = process.env.PORT;
 
-const dbConfig = require("../medhelp_server/services/dbConfig");
+const dbConfig = require("./services/dbConfig");
 dbConfig();
 
 const Doctor = require("./models/doc");
