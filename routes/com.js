@@ -184,7 +184,8 @@ router.delete("/deletedoctor", async (req, res) => {
 router.post("/message", async (req, res) => {
   try {
 
-    const data = req.body;
+    const data = req.body.support;
+    console.log(data);
     const supportsave = await Support.create({
       name: data.name,
       email: data.email,
