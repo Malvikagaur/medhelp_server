@@ -2,13 +2,14 @@ const express = require("express");
 const app = express();
 const logger = require("morgan");
 const cors = require("cors");
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8000;
 
 const dbConfig = require("./services/dbConfig");
 dbConfig();
 
 const Doctor = require("./models/doc");
 const User = require("./models/user");
+const Support = require("./models/support");
 
 
 app.use(logger("dev"));
@@ -16,8 +17,8 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: false }));
 
-app.get("/", function(req, res){
-    return res.send("This is appointment booking webapp");
+app.get("/", function (req, res) {
+  return res.send("This is appointment booking webapp");
 });
 
 const routes = require("./routes/com");
