@@ -11,12 +11,17 @@ const authFile = require("../services/authentication");
 router.post("/signup", async (req, res) => {
   try {
     var salt = bcrypt.genSaltSync(10);
+    console.log(req.body.password);
     var hash = bcrypt.hashSync(req.body.password, salt);
-    await User.create({
+    const detail = {
       username: req.body.username,
       useremail: req.body.useremail,
       password: hash,
-    });
+      usertype: "user"
+    }
+
+    console.log(detail);
+    await User.create(detail);
 
     return res.send("User created");
   }
@@ -36,8 +41,9 @@ router.get("/fetchusers", authFile.authenticationChecker, async (req, res) => {
     console.log(error);
   }
 });
+
 //login user 
-router.post("/signin", async (req, res) => {
+router.post("/signin", async (req,res) => {
   try {
 
     const user = await User.findOne({ useremail: req.body.useremail })
@@ -47,10 +53,11 @@ router.post("/signin", async (req, res) => {
     //find return array
     //findone return object
 
-    const check = bcrypt.compareSync(req.body.password, user.password);
+    console.log(req.body.password);
+    const check = await bcrypt.compare(req.body.password, user.password);
+
     if (!check) {
       return res.status(500).send("user password is not correct");
-
     }
 
     const token = authFile.genToken(user._id);
@@ -199,6 +206,44 @@ router.post("/message", async (req, res) => {
     console.log(error);
   }
 });
+
+
+//------------------ Get all Users ----------------------//
+
+router.get("/getUsers", async (req, res) => {
+  try {
+    const AllUsers = await User.find();
+    res.send(AllUsers)
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+
+//------------ Check user type -----------------//
+
+router.post("/checkuser", async (req, res) => {
+  try {
+    const data = req.body.data;
+    console.log(data);
+    const user = await User.findById(data._id);
+    if (data._id == null) {
+      res.send("public")
+    } else {
+      if (user.usertype == "admin") {
+        res.send("admin")
+      } else {
+        res.send("user")
+      }
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+})
+
+
+
 
 
 module.exports = router;
